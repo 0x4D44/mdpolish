@@ -31,11 +31,11 @@ export function Stats({ iterations, totalTimeSeconds }: StatsProps) {
   return (
     <View style={styles.container}>
       <View style={styles.statRow}>
-        <Text style={styles.label}>Total Iterations:</Text>
+        <Text style={styles.label}>Total Iterations: </Text>
         <Text style={styles.value}>{iterations}</Text>
       </View>
       <View style={styles.statRow}>
-        <Text style={styles.label}>Total Time:</Text>
+        <Text style={styles.label}>Total Time: </Text>
         <Text style={styles.value}>{formatTime(totalTimeSeconds)}</Text>
       </View>
     </View>
@@ -53,11 +53,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   statRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 5,
+    alignItems: 'center',
   },
   label: {
     fontSize: 16,
@@ -67,6 +69,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: '#1a237e',
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

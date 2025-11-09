@@ -41,9 +41,24 @@ export function Settings({
     setVibrationEnabled(config.vibrationEnabled);
   }, [config]);
 
+  // Snap to nearest 15 seconds (0.25 minutes)
+  const snapToQuarterMinute = (value: number) => {
+    const quarterMinutes = Math.round(value * 4) / 4; // Round to nearest 0.25
+    return quarterMinutes;
+  };
+
+  // Format display time to show minutes:seconds
+  const formatDisplayTime = (minutes: number) => {
+    const totalSeconds = Math.round(minutes * 60);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const handleSave = () => {
+    const snappedMinutes = snapToQuarterMinute(timerMinutes);
     onConfigChange({
-      timerDurationSeconds: Math.round(timerMinutes * 60),
+      timerDurationSeconds: Math.round(snappedMinutes * 60),
       soundEnabled,
       vibrationEnabled,
     });
@@ -76,13 +91,21 @@ export function Settings({
           <View style={styles.settingSection}>
             <Text style={styles.settingLabel}>Timer Duration</Text>
             <View style={styles.sliderContainer}>
-              <Text style={styles.sliderValue}>{Math.round(timerMinutes)} min</Text>
+              <Text style={styles.sliderValue}>{formatDisplayTime(snapToQuarterMinute(timerMinutes))}</Text>
               <Slider
                 style={styles.slider}
                 minimumValue={1}
                 maximumValue={10}
                 value={timerMinutes}
-                onValueChange={setTimerMinutes}
+                onValueChange={(value) => {
+                  const snapped = snapToQuarterMinute(value);
+                  setTimerMinutes(snapped);
+                }}
+                onSlidingComplete={(value) => {
+                  const snapped = snapToQuarterMinute(value);
+                  setTimerMinutes(snapped);
+                }}
+                step={0.25} // Step by 0.25 minutes (15 seconds)
                 minimumTrackTintColor="#1a237e"
                 maximumTrackTintColor="#CCC"
                 thumbTintColor="#1a237e"
